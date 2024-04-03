@@ -50,7 +50,7 @@ const getProps = (async (query:any) => {
         pageProps.collection = true;
       }
     }
-    if(!pageProps.random){
+    if(pageProps.random.length==0){
       const random = await axios.get("https://www.thecocktaildb.com/api/json/v1/1/random.php");
       pageProps.random = random.data?.drinks;
       pageProps.collection = false;
@@ -66,8 +66,7 @@ export const metadata = {
 
 export default async function Home({searchParams}:any) {
   const props = await getProps(searchParams);
- 
-
+  
 
   return (
     <main className="p-5 grid grid-cols-4 gap-4 overflow-hidden">
@@ -106,6 +105,7 @@ export default async function Home({searchParams}:any) {
         </div> : 
       
       <div className="center flex flex-col justify-between align-center col-span-2 h-screen overflow-scroll">
+        
         <div>
           <Image src={`${props.random[0]["strDrinkThumb"]}/preview`} alt="img" width={200} height={200} className="float-end" />
           {Object.keys(props.random).map(key => {
