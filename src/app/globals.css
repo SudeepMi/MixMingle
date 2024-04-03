@@ -9,12 +9,6 @@
   --color-three: #211951;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-
-  }
-}
 
 body {
   color: rgb(var(--foreground-rgb));
@@ -31,4 +25,10 @@ body {
 li{
   font-size: 13px;
   letter-spacing: 9;
+}
+.shuffle_btn{
+  background-color: var(--color-three);
+  color: #F0F3FF;
+  height: 5em;
+  width: 90%;
 }
