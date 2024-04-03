@@ -64,7 +64,7 @@ export const metadata = {
   title:"MixMingle - Cocktails--&--Mocktails"
 }
 
-export default async function Home({searchParams}) {
+export default async function Home({searchParams}:any) {
   const props = await getProps(searchParams);
  
 
