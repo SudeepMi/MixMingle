@@ -23,7 +23,7 @@ const getProps = (async (query:any) => {
     glass: glasses.data?.drinks || [],
     cats: categories.data?.drinks || [],
     ingredients: ingredients.data?.drinks || [],
-    random: [],
+    random:[],
     collection:false,
   }
 
@@ -52,7 +52,7 @@ const getProps = (async (query:any) => {
     }
     if(!pageProps.random){
       const random = await axios.get("https://www.thecocktaildb.com/api/json/v1/1/random.php");
-      pageProps.random = random.data?.drinks[0];
+      pageProps.random = random.data?.drinks;
       pageProps.collection = false;
     }
   }
@@ -107,12 +107,12 @@ export default async function Home({searchParams}:any) {
       
       <div className="center flex flex-col justify-between align-center col-span-2 h-screen overflow-scroll">
         <div>
-          <Image src={`${props.random["strDrinkThumb"]}/preview`} alt="img" width={200} height={200} className="float-end" />
+          <Image src={`${props.random[0]["strDrinkThumb"]}/preview`} alt="img" width={200} height={200} className="float-end" />
           {Object.keys(props.random).map(key => {
-            if (key == "strDrinkThumb" || !props.random[key]) return;
+            if (key == "strDrinkThumb" || !props.random[0][key]) return;
             return (
               <div key={key}>
-                <p className="p-2 text-sm">{key.replace("str", "")}: {props.random[key]}</p>
+                <p className="p-2 text-sm">{key.replace("str", "")}: {props.random[0][key]}</p>
               </div>
             );
           })}
