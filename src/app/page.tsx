@@ -16,6 +16,7 @@ const getProps = (async (query:any) => {
   const glasses = await axios.get("https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list");
   const categories = await axios.get("https://thecocktaildb.com/api/json/v1/1/list.php?c=list");
   const ingredients = await axios.get("https://thecocktaildb.com/api/json/v1/1/list.php?i=list");
+  const random = await axios.get("https://www.thecocktaildb.com/api/json/v1/1/random.php");
   
   // Pass data to the page via props
   const pageProps = {
@@ -23,38 +24,38 @@ const getProps = (async (query:any) => {
     glass: glasses.data?.drinks || [],
     cats: categories.data?.drinks || [],
     ingredients: ingredients.data?.drinks || [],
-    random:[],
+    random:random.data?.drinks[0] || {},
     collection:false,
+    cols:[]
   }
 
   if(query){
     if(query["g"]){
       const res = await axios.get(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?g=${query["g"]}`)
-      pageProps.random = res.data?.drinks;
+      pageProps.cols = res.data?.drinks;
       pageProps.collection = true;
     }
     if(query["a"]){
       const res = await axios.get(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?a=${query["a"]}`)
-      pageProps.random = res.data?.drinks;
+      pageProps.cols = res.data?.drinks;
       pageProps.collection = true;
     }
     if(query["c"]){
       const res = await axios.get(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${query["c"]}`)
-      pageProps.random = res.data?.drinks;
+      pageProps.cols = res.data?.drinks;
       pageProps.collection = true;
     }
     if(query["i"]){
       const res = await axios.get(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${query["i"]}`)
       if(res.status==200){
-        pageProps.random = res.data?.drinks;
+        pageProps.cols = res.data?.drinks;
         pageProps.collection = true;
       }
     }
-    if(pageProps.random.length==0){
-      const random = await axios.get("https://www.thecocktaildb.com/api/json/v1/1/random.php");
-      pageProps.random = random.data?.drinks;
-      pageProps.collection = false;
-    }
+
+     
+    
+
   }
   return pageProps;
 });
@@ -94,7 +95,7 @@ export default async function Home({searchParams}:any) {
       </div>
       {
         props.collection ? <div className="center flex-wrap flex gap-4 justify-center col-span-2 h-screen overflow-scroll">
-            {props.random?.map((d,k)=>{
+            {props.cols?.map((d,k)=>{
               return (
                 <div key={k}>
                   <Image src={d["strDrinkThumb"]+"/preview"} width={200} height={200} alt="" />
@@ -107,12 +108,12 @@ export default async function Home({searchParams}:any) {
       <div className="center flex flex-col justify-between align-center col-span-2 h-screen overflow-scroll">
         
         <div>
-          <Image src={`${props.random[0]["strDrinkThumb"]}/preview`} alt="img" width={200} height={200} className="float-end" />
+          <Image src={`${props.random["strDrinkThumb"]}/preview`} alt="img" width={200} height={200} className="float-end" />
           {Object.keys(props.random).map(key => {
-            if (key == "strDrinkThumb" || !props.random[0][key]) return;
+            if (key == "strDrinkThumb" || !props.random[key]) return;
             return (
               <div key={key}>
-                <p className="p-2 text-sm">{key.replace("str", "")}: {props.random[0][key]}</p>
+                <p className="p-2 text-sm">{key.replace("str", "")}: {props.random[key]}</p>
               </div>
             );
           })}
